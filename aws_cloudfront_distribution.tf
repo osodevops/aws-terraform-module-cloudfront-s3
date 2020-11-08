@@ -33,7 +33,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   ]
 
   logging_config {
-    bucket          = module.bucket-cloudwatch-logs-backup.bucket_domain_name
+    bucket          = module.bucket_cloudwatch_logs_backup.bucket_domain_name
     include_cookies = false
     prefix          = "cloudfront/"
   }
@@ -78,7 +78,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   #tags
   tags = var.common_tags
 
-  depends_on = [module.bucket-cloudwatch-logs-backup, aws_acm_certificate.certificate]
+  depends_on = [module.bucket_cloudwatch_logs_backup, aws_acm_certificate.certificate]
 }
 
 resource "aws_cloudfront_origin_access_identity" "current" {}

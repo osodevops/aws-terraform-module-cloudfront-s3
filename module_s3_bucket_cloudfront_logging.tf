@@ -1,5 +1,6 @@
-module "bucket-cloudwatch-logs-backup" {
-  source                  = "../../aws-terraform-module-s3"
+module "bucket_cloudwatch_logs_backup" {
+  source       = "git::ssh://git@github.com/osodevops/aws-terraform-module-s3.git"
+//  source                  = "../../aws-terraform-module-s3"
   s3_bucket_name          = local.logging_bucket_name
   s3_bucket_force_destroy = false
   s3_bucket_policy        = ""
