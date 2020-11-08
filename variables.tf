@@ -21,6 +21,11 @@ variable "distribution_fqdn" {
   description = "Fully qualified domain bound to Cloudfront."
 }
 
+variable "distribution_name" {
+  type = string
+  description = "A unique name give to the distribution."
+}
+
 variable "hosted_zone_name" {
   type        = string
   description = "The route53 zone."
@@ -59,5 +64,5 @@ variable "common_tags" {
 }
 
 locals {
-  logging_bucket_name = "test-cloudfront-logs-${data.aws_region.current.name}-${lower(data.aws_iam_account_alias.current.account_alias)}"
+  logging_bucket_name = "${var.distribution_name}-cf-logs-${data.aws_region.current.name}-${lower(data.aws_iam_account_alias.current.account_alias)}"
 }

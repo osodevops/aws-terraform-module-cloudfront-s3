@@ -8,7 +8,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
       origin_access_identity = aws_cloudfront_origin_access_identity.current.cloudfront_access_identity_path
     }
   }
-
+  comment = "${var.distribution_name} distribution"
   enabled         = true
   is_ipv6_enabled = true
 
