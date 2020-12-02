@@ -63,6 +63,15 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
     target_origin_id       = "${data.aws_s3_bucket.origin_bucket.id}-origin"
     viewer_protocol_policy = "redirect-to-https"
+
+    dynamic "lambda_function_association" {
+      for_each = var.lambda_function_association
+      content {
+        event_type   = lambda_function_association.value.event_type
+        include_body = lookup(lambda_function_association.value, "include_body", null)
+        lambda_arn   = lambda_function_association.value.lambda_arn
+      }
+    }
   }
 
   price_class = var.price_class
