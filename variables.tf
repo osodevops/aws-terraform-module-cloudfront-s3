@@ -46,6 +46,17 @@ variable "ttl" {
   default = "300"
 }
 
+variable "lambda_function_association" {
+  type = list(object({
+    event_type   = string
+    include_body = bool
+    lambda_arn   = string
+  }))
+
+  description = "A config block that triggers a lambda function with specific actions"
+  default     = []
+}
+
 variable "use_cloudfront_default_certificate" {
   type        = bool
   description = "Default SSL certificate."
