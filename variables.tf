@@ -16,6 +16,12 @@ variable "cloudfront_cache_max_ttl" {
   default     = 300
 }
 
+variable "cloudfront_cache_compress_content" {
+  type        = bool
+  description = "Whether you want CloudFront to automatically compress content for web requests that include Accept-Encoding: gzip in the request header"
+  default     = false
+}
+
 variable "distribution_fqdn" {
   type        = string
   description = "Fully qualified domain bound to Cloudfront."

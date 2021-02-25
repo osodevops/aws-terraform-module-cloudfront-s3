@@ -43,6 +43,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     min_ttl     = var.cloudfront_cache_min_ttl
     default_ttl = var.cloudfront_cache_default_ttl
     max_ttl     = var.cloudfront_cache_max_ttl
+    compress    = var.cloudfront_cache_compress_content
+
     allowed_methods = [
       "GET",
       "HEAD",
