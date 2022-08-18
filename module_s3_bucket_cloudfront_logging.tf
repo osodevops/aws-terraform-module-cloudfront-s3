@@ -12,7 +12,16 @@ module "bucket_cloudwatch_logs_backup" {
   ignore_public_acls      = true
 
   versioning = {
-    enabled = false
-    mfa_delete = false
+    status = "Enabled"
+    mfa_delete = "Disabled"
   }
+
+  cors_rule = {
+    allowed_headers = ["Authorization"]
+    allowed_methods = ["GET"]
+    allowed_origins = ["*"]
+    expose_headers  = []
+    max_age_seconds = 3000
+  }
+
 }
