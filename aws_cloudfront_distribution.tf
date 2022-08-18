@@ -18,7 +18,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     cloudfront_default_certificate = var.use_cloudfront_default_certificate
     acm_certificate_arn            = aws_acm_certificate.certificate.arn
     ssl_support_method             = "sni-only"
-    minimum_protocol_version       = "TLSv1.2_2018"
+    minimum_protocol_version       = "TLSv1.2_2021"
   }
 
   custom_error_response {

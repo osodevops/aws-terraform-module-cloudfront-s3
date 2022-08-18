@@ -1,6 +1,5 @@
 module "bucket_cloudwatch_logs_backup" {
   source       = "git::ssh://git@github.com/osodevops/aws-terraform-module-s3.git"
-//  source                  = "../../aws-terraform-module-s3"
   s3_bucket_name          = local.logging_bucket_name
   s3_bucket_force_destroy = false
   s3_bucket_policy        = ""
@@ -16,22 +15,4 @@ module "bucket_cloudwatch_logs_backup" {
     enabled = false
     mfa_delete = false
   }
-
-  lifecycle_rule = [
-    {
-      enabled = true
-      id      = "retire logs after 31 days"
-      prefix  = "logs/access"
-      expiration = [
-        {
-          days = 31
-        },
-      ]
-      noncurrent_version_expiration = [
-        {
-          days = 7
-        },
-      ]
-    }
-  ]
 }
