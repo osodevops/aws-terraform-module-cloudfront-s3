@@ -34,4 +34,25 @@ data "aws_iam_policy_document" "cloudfront" {
       ]
     }
   }
+
+  statement {
+    sid = "AllowSSLRequestsOnly"
+    effect = "Deny"
+    actions = [
+      "s3:*",
+    ]
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values   = ["false"]
+    }
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+    resources = [
+      data.aws_s3_bucket.origin_bucket.arn,
+      "${data.aws_s3_bucket.origin_bucket.arn}/*"
+    ]
+  }
 }
