@@ -40,6 +40,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   #caching
   default_cache_behavior {
+   response_headers_policy_id = aws_cloudfront_response_headers_policy.security_headers_policy.id
+
     min_ttl     = var.cloudfront_cache_min_ttl
     default_ttl = var.cloudfront_cache_default_ttl
     max_ttl     = var.cloudfront_cache_max_ttl
@@ -93,3 +95,41 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 }
 
 resource "aws_cloudfront_origin_access_identity" "current" {}
+
+ resource "aws_cloudfront_response_headers_policy" "security_headers_policy" {
+  name = "${var.distribution_name}-cloudfront-security-headers-policy"
+  security_headers_config {
+    # https://infosec.mozilla.org/guidelines/web_security#x-content-type-options
+    # content_type_options {
+    #   override = true
+    # }
+    # https://infosec.mozilla.org/guidelines/web_security#x-frame-options
+    frame_options {
+      frame_option = "DENY"
+      override = true
+    }
+    # https://infosec.mozilla.org/guidelines/web_security#referrer-policy
+    # referrer_policy {
+    #   referrer_policy = "same-origin"
+    #   override = true
+    # }
+    # https://infosec.mozilla.org/guidelines/web_security#content-security-policy
+    # xss_protection {
+    #   mode_block = true
+    #   protection = true
+    #   override = true
+    # }
+    # https://infosec.mozilla.org/guidelines/web_security#http-strict-transport-security
+    strict_transport_security {
+      access_control_max_age_sec = "63072000"
+      include_subdomains = true
+      preload = true
+      override = true
+    }
+    # https://infosec.mozilla.org/guidelines/web_security#content-security-policy
+    # content_security_policy {
+    #   content_security_policy = "frame-ancestors 'none'; default-src 'none'; img-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'"
+    #   override = true
+    # }
+  }
+}
