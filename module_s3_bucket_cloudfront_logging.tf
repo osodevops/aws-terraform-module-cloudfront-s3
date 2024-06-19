@@ -5,13 +5,7 @@ module "bucket_cloudwatch_logs_backup" {
   bucket        = local.logging_bucket_name
   force_destroy = false
   tags          = var.common_tags
-  grant = [
-    {
-      type       = "CanonicalUser"
-      permission = "FULL_CONTROL"
-      id         = data.aws_canonical_user_id.current.id
-    }
-  ]
+  acl           = "private"
 
   # Bucket public access
   restrict_public_buckets = true
