@@ -22,13 +22,31 @@ variable "cloudfront_cache_compress_content" {
   default     = false
 }
 
+variable "custom_error_response_error_code" {
+  description = "Custom error code for error response"
+  type        = number
+  default     = 404
+}
+
+variable "custom_error_response_min_ttl" {
+  description = "Minimum time-to-live for error caching"
+  type        = number
+  default     = 300
+}
+
+variable "custom_error_response_code" {
+  description = "Custom error code for error response"
+  type        = number
+  default     = 200
+}
+
 variable "distribution_fqdn" {
   type        = string
   description = "Fully qualified domain bound to Cloudfront."
 }
 
 variable "distribution_name" {
-  type = string
+  type        = string
   description = "A unique name give to the distribution."
 }
 
@@ -37,10 +55,16 @@ variable "hosted_zone_name" {
   description = "The route53 zone."
 }
 
+variable "minimum_protocol_version" {
+  description = "Minimum protocol version for the viewer certificate"
+  type        = string
+  default     = "TLSv1.2_2021"
+}
+
 variable "price_class" {
-  type    = string
+  type        = string
   description = "The price class for this distribution."
-  default = "PriceClass_100"
+  default     = "PriceClass_100"
 }
 
 variable "s3_source_bukcet_name" {

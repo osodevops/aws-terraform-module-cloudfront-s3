@@ -18,13 +18,13 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     cloudfront_default_certificate = var.use_cloudfront_default_certificate
     acm_certificate_arn            = aws_acm_certificate.certificate.arn
     ssl_support_method             = "sni-only"
-    minimum_protocol_version       = "TLSv1.2_2021"
+    minimum_protocol_version       = var.minimum_protocol_version
   }
 
   custom_error_response {
-    error_caching_min_ttl = 300
-    error_code            = 404
-    response_code         = 200
+    error_caching_min_ttl = var.custom_error_response_min_ttl
+    error_code            = var.custom_error_response_error_code
+    response_code         = var.custom_error_response_code
     response_page_path    = "/index.html"
   }
 
