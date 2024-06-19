@@ -22,6 +22,18 @@ variable "cloudfront_cache_compress_content" {
   default     = false
 }
 
+variable "cors_rules" {
+  description = "List of maps of cors rules to ap[ply to the logging bucket"
+  type = list(object({
+    allowed_headers = list(string)
+    allowed_methods = list(string)
+    allowed_origins = list(string)
+    expose_headers  = list(string)
+    max_age_seconds = number
+  }))
+  default = []
+}
+
 variable "custom_error_response_error_code" {
   description = "Custom error code for error response"
   type        = number
@@ -55,6 +67,12 @@ variable "hosted_zone_name" {
   description = "The route53 zone."
 }
 
+variable "s3_logging_versioning" {
+  description = "Whether to version the contents of the logging bucket"
+  type = string
+  default = "Suspended"
+}
+
 variable "minimum_protocol_version" {
   description = "Minimum protocol version for the viewer certificate"
   type        = string
@@ -83,6 +101,12 @@ variable "function_associations" {
     function_arn   = string
   }))
   default     = []
+}
+
+variable "response_header_policy_enable" {
+  description = "Feature-flag for including response header policy"
+  type        = bool
+  default     = true
 }
 
 variable "use_cloudfront_default_certificate" {

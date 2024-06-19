@@ -1,7 +1,9 @@
 resource "aws_route53_record" "fqdn_cloudfront_dist" {
   zone_id = data.aws_route53_zone.current.zone_id
   name    = var.distribution_fqdn
-  type    = "A"
+
+  allow_overwrite = false
+  type            = "A"
   alias {
     evaluate_target_health = false
     name                   = aws_cloudfront_distribution.s3_distribution.domain_name

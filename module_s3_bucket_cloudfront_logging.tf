@@ -20,7 +20,7 @@ module "bucket_cloudwatch_logs_backup" {
   ignore_public_acls      = true
 
   versioning = {
-    status     = "Suspended"
+    status     = var.s3_logging_versioning
     mfa_delete = "Disabled"
   }
 
@@ -33,4 +33,7 @@ module "bucket_cloudwatch_logs_backup" {
       }
     }
   }
+
+  cors_rule = var.cors_rules
+
 }

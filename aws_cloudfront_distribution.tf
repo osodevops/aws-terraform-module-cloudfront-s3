@@ -95,8 +95,9 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
 resource "aws_cloudfront_origin_access_identity" "current" {}
 
- resource "aws_cloudfront_response_headers_policy" "security_headers_policy" {
-  name = "${var.distribution_name}-cloudfront-security-headers-policy"
+resource "aws_cloudfront_response_headers_policy" "security_headers_policy" {
+  name  = "${var.distribution_name}-cloudfront-security-headers-policy"
+  count = var.response_header_policy_enable ? 1 : 0
   security_headers_config {
     # https://infosec.mozilla.org/guidelines/web_security#x-content-type-options
     # content_type_options {
