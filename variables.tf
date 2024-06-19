@@ -67,7 +67,7 @@ variable "price_class" {
   default     = "PriceClass_100"
 }
 
-variable "s3_source_bukcet_name" {
+variable "s3_source_bucket_name" {
   type = string
 }
 

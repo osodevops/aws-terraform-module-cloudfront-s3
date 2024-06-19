@@ -33,7 +33,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   ]
 
   logging_config {
-    bucket          = module.bucket_cloudwatch_logs_backup.bucket_domain_name
+    bucket          = module.bucket_cloudwatch_logs_backup.s3_bucket_bucket_domain_name
     include_cookies = false
     prefix          = "cloudfront/"
   }
