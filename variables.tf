@@ -76,14 +76,12 @@ variable "ttl" {
   default = "300"
 }
 
-variable "lambda_function_association" {
+variable "function_associations" {
+  description = "A config block that triggers a function with specific actions"
   type = list(object({
     event_type   = string
-    include_body = bool
-    lambda_arn   = string
+    function_arn   = string
   }))
-
-  description = "A config block that triggers a lambda function with specific actions"
   default     = []
 }
 
