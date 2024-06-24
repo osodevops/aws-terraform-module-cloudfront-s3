@@ -1,5 +1,6 @@
 resource "aws_route53_record" "fqdn_cloudfront_dist" {
-  zone_id = data.aws_route53_zone.current.zone_id
+  count   = var.whitelabel_domain ? 0 : 1
+  zone_id = one(data.aws_route53_zone.current).zone_id
   name    = var.distribution_fqdn
 
   allow_overwrite = false

@@ -1,11 +1,14 @@
 module "bucket_cloudwatch_logs_backup" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "~>3.0"
+  version = "~>4.0"
 
-  bucket        = local.logging_bucket_name
-  force_destroy = false
-  tags          = var.common_tags
-  acl           = "private"
+  bucket                   = local.logging_bucket_name
+  force_destroy            = false
+  tags                     = var.common_tags
+  acl                      = var.whitelabel_domain ? null : "private"
+  object_ownership         = "ObjectWriter"
+  control_object_ownership = var.whitelabel_domain ? true : false
+  attach_access_log_delivery_policy = var.whitelabel_domain ? true : false
 
   # Bucket public access
   restrict_public_buckets = true

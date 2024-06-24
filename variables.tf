@@ -24,7 +24,7 @@ variable "cloudfront_cache_compress_content" {
 
 variable "cors_rules" {
   description = "List of maps of cors rules to ap[ply to the logging bucket"
-  type = list(object({
+  type        = list(object({
     allowed_headers = list(string)
     allowed_methods = list(string)
     allowed_origins = list(string)
@@ -69,8 +69,8 @@ variable "hosted_zone_name" {
 
 variable "s3_logging_versioning" {
   description = "Whether to version the contents of the logging bucket"
-  type = string
-  default = "Suspended"
+  type        = string
+  default     = "Suspended"
 }
 
 variable "minimum_protocol_version" {
@@ -96,11 +96,11 @@ variable "ttl" {
 
 variable "function_associations" {
   description = "A config block that triggers a function with specific actions"
-  type = list(object({
+  type        = list(object({
     event_type   = string
-    function_arn   = string
+    function_arn = string
   }))
-  default     = []
+  default = []
 }
 
 variable "response_header_policy_enable" {
@@ -119,6 +119,12 @@ variable "web_acl_id" {
   type        = string
   description = "Optional WAF Id to associate with the distribution"
   default     = ""
+}
+
+variable "whitelabel_domain" {
+  description = "Flag to toggle whitelabeling the domain"
+  type        = bool
+  default     = false
 }
 
 variable "common_tags" {
