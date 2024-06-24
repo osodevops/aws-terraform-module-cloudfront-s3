@@ -1,5 +1,5 @@
 output "logging_bucket" {
-  value = module.bucket_cloudwatch_logs_backup.s3_id
+  value = module.bucket_cloudwatch_logs_backup.s3_bucket_id
 }
 
 output "distribution" {

@@ -22,13 +22,43 @@ variable "cloudfront_cache_compress_content" {
   default     = false
 }
 
+variable "cors_rules" {
+  description = "List of maps of cors rules to ap[ply to the logging bucket"
+  type        = list(object({
+    allowed_headers = list(string)
+    allowed_methods = list(string)
+    allowed_origins = list(string)
+    expose_headers  = list(string)
+    max_age_seconds = number
+  }))
+  default = []
+}
+
+variable "custom_error_response_error_code" {
+  description = "Custom error code for error response"
+  type        = number
+  default     = 404
+}
+
+variable "custom_error_response_min_ttl" {
+  description = "Minimum time-to-live for error caching"
+  type        = number
+  default     = 300
+}
+
+variable "custom_error_response_code" {
+  description = "Custom error code for error response"
+  type        = number
+  default     = 200
+}
+
 variable "distribution_fqdn" {
   type        = string
   description = "Fully qualified domain bound to Cloudfront."
 }
 
 variable "distribution_name" {
-  type = string
+  type        = string
   description = "A unique name give to the distribution."
 }
 
@@ -37,13 +67,25 @@ variable "hosted_zone_name" {
   description = "The route53 zone."
 }
 
-variable "price_class" {
-  type    = string
-  description = "The price class for this distribution."
-  default = "PriceClass_100"
+variable "s3_logging_versioning" {
+  description = "Whether to version the contents of the logging bucket"
+  type        = string
+  default     = "Suspended"
 }
 
-variable "s3_source_bukcet_name" {
+variable "minimum_protocol_version" {
+  description = "Minimum protocol version for the viewer certificate"
+  type        = string
+  default     = "TLSv1.2_2021"
+}
+
+variable "price_class" {
+  type        = string
+  description = "The price class for this distribution."
+  default     = "PriceClass_100"
+}
+
+variable "s3_source_bucket_name" {
   type = string
 }
 
@@ -52,15 +94,19 @@ variable "ttl" {
   default = "300"
 }
 
-variable "lambda_function_association" {
-  type = list(object({
+variable "function_associations" {
+  description = "A config block that triggers a function with specific actions"
+  type        = list(object({
     event_type   = string
-    include_body = bool
-    lambda_arn   = string
+    function_arn = string
   }))
+  default = []
+}
 
-  description = "A config block that triggers a lambda function with specific actions"
-  default     = []
+variable "response_header_policy_enable" {
+  description = "Feature-flag for including response header policy"
+  type        = bool
+  default     = true
 }
 
 variable "use_cloudfront_default_certificate" {
@@ -73,6 +119,12 @@ variable "web_acl_id" {
   type        = string
   description = "Optional WAF Id to associate with the distribution"
   default     = ""
+}
+
+variable "whitelabel_domain" {
+  description = "Flag to toggle whitelabeling the domain"
+  type        = bool
+  default     = false
 }
 
 variable "common_tags" {

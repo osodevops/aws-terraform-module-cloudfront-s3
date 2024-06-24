@@ -8,7 +8,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
       origin_access_identity = aws_cloudfront_origin_access_identity.current.cloudfront_access_identity_path
     }
   }
-  comment = "${var.distribution_name} distribution"
+  comment         = "${var.distribution_name} distribution"
   enabled         = true
   is_ipv6_enabled = true
 
@@ -18,13 +18,13 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     cloudfront_default_certificate = var.use_cloudfront_default_certificate
     acm_certificate_arn            = aws_acm_certificate.certificate.arn
     ssl_support_method             = "sni-only"
-    minimum_protocol_version       = "TLSv1.2_2021"
+    minimum_protocol_version       = var.minimum_protocol_version
   }
 
   custom_error_response {
-    error_caching_min_ttl = 300
-    error_code            = 404
-    response_code         = 200
+    error_caching_min_ttl = var.custom_error_response_min_ttl
+    error_code            = var.custom_error_response_error_code
+    response_code         = var.custom_error_response_code
     response_page_path    = "/index.html"
   }
 
@@ -33,14 +33,14 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   ]
 
   logging_config {
-    bucket          = module.bucket_cloudwatch_logs_backup.bucket_domain_name
+    bucket          = module.bucket_cloudwatch_logs_backup.s3_bucket_bucket_domain_name
     include_cookies = false
     prefix          = "cloudfront/"
   }
 
   #caching
   default_cache_behavior {
-   response_headers_policy_id = aws_cloudfront_response_headers_policy.security_headers_policy.id
+    response_headers_policy_id = var.response_header_policy_enable ? one(aws_cloudfront_response_headers_policy.security_headers_policy).id : ""
 
     min_ttl     = var.cloudfront_cache_min_ttl
     default_ttl = var.cloudfront_cache_default_ttl
@@ -68,12 +68,11 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     target_origin_id       = "${data.aws_s3_bucket.origin_bucket.id}-origin"
     viewer_protocol_policy = "redirect-to-https"
 
-    dynamic "lambda_function_association" {
-      for_each = var.lambda_function_association
+    dynamic "function_association" {
+      for_each = var.function_associations
       content {
-        event_type   = lambda_function_association.value.event_type
-        include_body = lookup(lambda_function_association.value, "include_body", null)
-        lambda_arn   = lambda_function_association.value.lambda_arn
+        event_type   = function_association.value.event_type
+        function_arn = function_association.value.function_arn
       }
     }
   }
@@ -96,8 +95,9 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
 resource "aws_cloudfront_origin_access_identity" "current" {}
 
- resource "aws_cloudfront_response_headers_policy" "security_headers_policy" {
-  name = "${var.distribution_name}-cloudfront-security-headers-policy"
+resource "aws_cloudfront_response_headers_policy" "security_headers_policy" {
+  name  = "${var.distribution_name}-cloudfront-security-headers-policy"
+  count = var.response_header_policy_enable ? 1 : 0
   security_headers_config {
     # https://infosec.mozilla.org/guidelines/web_security#x-content-type-options
     # content_type_options {
@@ -106,7 +106,7 @@ resource "aws_cloudfront_origin_access_identity" "current" {}
     # https://infosec.mozilla.org/guidelines/web_security#x-frame-options
     frame_options {
       frame_option = "DENY"
-      override = true
+      override     = true
     }
     # https://infosec.mozilla.org/guidelines/web_security#referrer-policy
     # referrer_policy {
@@ -122,9 +122,9 @@ resource "aws_cloudfront_origin_access_identity" "current" {}
     # https://infosec.mozilla.org/guidelines/web_security#http-strict-transport-security
     strict_transport_security {
       access_control_max_age_sec = "63072000"
-      include_subdomains = true
-      preload = true
-      override = true
+      include_subdomains         = true
+      preload                    = true
+      override                   = true
     }
     # https://infosec.mozilla.org/guidelines/web_security#content-security-policy
     # content_security_policy {
