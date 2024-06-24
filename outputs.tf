@@ -10,3 +10,6 @@ output "identity" {
   value = aws_cloudfront_origin_access_identity.current
 }
 
+output "domain_validations" {
+  value = aws_route53_record.certificate_validation
+}
