@@ -109,6 +109,12 @@ variable "response_header_policy_enable" {
   default     = true
 }
 
+variable "shared_origin_access_identity" {
+  description = "cloudfront_access_identity_path from a previous distribution, so we can use the same origin"
+  type        = string
+  default     = ""
+}
+
 variable "use_cloudfront_default_certificate" {
   type        = bool
   description = "Default SSL certificate."
@@ -134,4 +140,5 @@ variable "common_tags" {
 
 locals {
   logging_bucket_name = "${var.distribution_name}-cf-logs-${data.aws_region.current.name}-${lower(data.aws_iam_account_alias.current.account_alias)}"
+  shared_origin_path  = var.shared_origin_access_identity != "" ? var.shared_origin_access_identity : aws_cloudfront_origin_access_identity.current[0].cloudfront_access_identity_path
 }

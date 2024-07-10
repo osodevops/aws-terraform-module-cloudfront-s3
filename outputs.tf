@@ -7,7 +7,7 @@ output "distribution" {
 }
 
 output "identity" {
-  value = aws_cloudfront_origin_access_identity.current
+  value = try(aws_cloudfront_origin_access_identity.current[0], "")
 }
 
 output "domain_validations" {

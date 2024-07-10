@@ -5,7 +5,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     origin_id   = "${data.aws_s3_bucket.origin_bucket.id}-origin"
 
     s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.current.cloudfront_access_identity_path
+      origin_access_identity = local.shared_origin_path
     }
   }
   comment         = "${var.distribution_name} distribution"
@@ -93,7 +93,9 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   depends_on = [module.bucket_cloudwatch_logs_backup, aws_acm_certificate.certificate]
 }
 
-resource "aws_cloudfront_origin_access_identity" "current" {}
+resource "aws_cloudfront_origin_access_identity" "current" {
+        count = var.shared_origin_access_identity != "" ? 0 : 1
+}
 
 resource "aws_cloudfront_response_headers_policy" "security_headers_policy" {
   name  = "${var.distribution_name}-cloudfront-security-headers-policy"
