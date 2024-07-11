@@ -11,5 +11,5 @@ output "identity" {
 }
 
 output "domain_validations" {
-  value = aws_route53_record.certificate_validation
+  value = aws_acm_certificate.certificate.domain_validation_options
 }

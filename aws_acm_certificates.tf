@@ -10,6 +10,7 @@ resource "aws_acm_certificate" "certificate" {
 }
 
 resource "aws_acm_certificate_validation" "cert" {
+  count                   = var.whitelabel_domain ? 0 : 1
   provider                = aws.cloudfront
   certificate_arn         = aws_acm_certificate.certificate.arn
   validation_record_fqdns = [for record in aws_route53_record.certificate_validation : record.fqdn]
