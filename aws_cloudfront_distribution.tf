@@ -16,7 +16,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   viewer_certificate {
     cloudfront_default_certificate = var.use_cloudfront_default_certificate
-    acm_certificate_arn            = aws_acm_certificate.certificate.arn
+    acm_certificate_arn            = var.use_cloudfront_default_certificate ? "" : aws_acm_certificate.certificate.arn
     ssl_support_method             = "sni-only"
     minimum_protocol_version       = var.minimum_protocol_version
   }
@@ -28,9 +28,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     response_page_path    = "/index.html"
   }
 
-  aliases = [
-    var.distribution_fqdn
-  ]
+  aliases = var.use_cloudfront_default_certificate ? [] : [var.distribution_fqdn]
 
   logging_config {
     bucket          = module.bucket_cloudwatch_logs_backup.s3_bucket_bucket_domain_name
