@@ -133,6 +133,12 @@ variable "whitelabel_domain" {
   default     = false
 }
 
+variable "acl_disabled" {
+  description = "Boolean flag to disable ACL"
+  type        = bool
+  default     = false
+}
+
 variable "common_tags" {
   type        = map(string)
   description = "Implements the common tags."
