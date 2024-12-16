@@ -24,7 +24,7 @@ variable "cloudfront_cache_compress_content" {
 
 variable "cors_rules" {
   description = "List of maps of cors rules to ap[ply to the logging bucket"
-  type        = list(object({
+  type = list(object({
     allowed_headers = list(string)
     allowed_methods = list(string)
     allowed_origins = list(string)
@@ -86,7 +86,8 @@ variable "price_class" {
 }
 
 variable "s3_source_bucket_name" {
-  type = string
+  type    = string
+  default = ""
 }
 
 variable "ttl" {
@@ -96,7 +97,7 @@ variable "ttl" {
 
 variable "function_associations" {
   description = "A config block that triggers a function with specific actions"
-  type        = list(object({
+  type = list(object({
     event_type   = string
     function_arn = string
   }))

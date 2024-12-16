@@ -2,7 +2,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   provider = aws.cloudfront
   origin {
     domain_name = data.aws_s3_bucket.origin_bucket.bucket_regional_domain_name
-    origin_id   = "${data.aws_s3_bucket.origin_bucket.id}-origin"
+    origin_id   = "${var.s3_source_bucket_name}-origin"
 
     s3_origin_config {
       origin_access_identity = local.shared_origin_path
@@ -63,7 +63,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
       }
     }
 
-    target_origin_id       = "${data.aws_s3_bucket.origin_bucket.id}-origin"
+    target_origin_id       = "${var.s3_source_bucket_name}-origin"
     viewer_protocol_policy = "redirect-to-https"
 
     dynamic "function_association" {
@@ -92,7 +92,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 }
 
 resource "aws_cloudfront_origin_access_identity" "current" {
-        count = var.shared_origin_access_identity != "" ? 0 : 1
+  count = var.shared_origin_access_identity != "" ? 0 : 1
 }
 
 resource "aws_cloudfront_response_headers_policy" "security_headers_policy" {
