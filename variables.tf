@@ -24,7 +24,7 @@ variable "cloudfront_cache_compress_content" {
 
 variable "cors_rules" {
   description = "List of maps of cors rules to ap[ply to the logging bucket"
-  type        = list(object({
+  type = list(object({
     allowed_headers = list(string)
     allowed_methods = list(string)
     allowed_origins = list(string)
@@ -96,7 +96,7 @@ variable "ttl" {
 
 variable "function_associations" {
   description = "A config block that triggers a function with specific actions"
-  type        = list(object({
+  type = list(object({
     event_type   = string
     function_arn = string
   }))
@@ -144,6 +144,40 @@ variable "owner_enabled" {
   type        = bool
   default     = true
 }
+
+variable "origin_type" {
+  description = "The type of origin to use: s3 or http"
+  type        = string
+  default     = "s3"
+}
+
+variable "origin_domain_name" {
+  description = "The domain name of the origin"
+  type        = string
+}
+
+variable "origin_id" {
+  description = "The unique origin ID"
+  type        = string
+}
+
+variable "custom_origin_config" {
+  description = "Optional custom origin config for HTTP(S) origins"
+  type = object({
+    http_port              = number
+    https_port             = number
+    origin_protocol_policy = string
+    origin_ssl_protocols   = list(string)
+  })
+  default = null
+}
+
+variable "s3_origin_access_identity" {
+  description = "S3 origin access identity path (if using S3 origin)"
+  type        = string
+  default     = ""
+}
+
 
 variable "common_tags" {
   type        = map(string)

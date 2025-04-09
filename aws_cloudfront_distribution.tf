@@ -1,11 +1,24 @@
 resource "aws_cloudfront_distribution" "s3_distribution" {
   provider = aws.cloudfront
   origin {
-    domain_name = data.aws_s3_bucket.origin_bucket.bucket_regional_domain_name
-    origin_id   = "${data.aws_s3_bucket.origin_bucket.id}-origin"
+    domain_name = var.origin_domain_name
+    origin_id   = var.origin_id
 
-    s3_origin_config {
-      origin_access_identity = local.shared_origin_path
+    dynamic "s3_origin_config" {
+      for_each = var.origin_type == "s3" ? [1] : []
+      content {
+        origin_access_identity = var.s3_origin_access_identity
+      }
+    }
+
+    dynamic "custom_origin_config" {
+      for_each = var.origin_type == "http" ? [1] : []
+      content {
+        http_port              = var.custom_origin_config.http_port
+        https_port             = var.custom_origin_config.https_port
+        origin_protocol_policy = var.custom_origin_config.origin_protocol_policy
+        origin_ssl_protocols   = var.custom_origin_config.origin_ssl_protocols
+      }
     }
   }
   comment         = "${var.distribution_name} distribution"
@@ -92,7 +105,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 }
 
 resource "aws_cloudfront_origin_access_identity" "current" {
-        count = var.shared_origin_access_identity != "" ? 0 : 1
+  count = var.shared_origin_access_identity != "" ? 0 : 1
 }
 
 resource "aws_cloudfront_response_headers_policy" "security_headers_policy" {
