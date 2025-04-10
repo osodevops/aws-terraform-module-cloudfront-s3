@@ -1,6 +1,6 @@
 resource "aws_s3_bucket_policy" "allow_cloudfront" {
   count  = var.shared_origin_access_identity != "" ? 0 : 1
-  bucket = data.aws_s3_bucket.origin_bucket.id
+  bucket = data.aws_s3_bucket.origin_bucket[0].id
   policy = data.aws_iam_policy_document.cloudfront[0].json
 }
 
@@ -11,7 +11,7 @@ data "aws_iam_policy_document" "cloudfront" {
       "s3:ListBucket",
     ]
     resources = [
-      data.aws_s3_bucket.origin_bucket.arn,
+      data.aws_s3_bucket.origin_bucket[0].arn,
     ]
     principals {
       type = "AWS"
@@ -26,7 +26,7 @@ data "aws_iam_policy_document" "cloudfront" {
       "s3:GetObject",
     ]
     resources = [
-      "${data.aws_s3_bucket.origin_bucket.arn}/*",
+      "${data.aws_s3_bucket.origin_bucket[0].arn}/*",
     ]
     principals {
       type = "AWS"
@@ -53,8 +53,8 @@ data "aws_iam_policy_document" "cloudfront" {
       identifiers = ["*"]
     }
     resources = [
-      data.aws_s3_bucket.origin_bucket.arn,
-      "${data.aws_s3_bucket.origin_bucket.arn}/*"
+      data.aws_s3_bucket.origin_bucket[0].arn,
+      "${data.aws_s3_bucket.origin_bucket[0].arn}/*"
     ]
   }
 }
