@@ -1,7 +1,5 @@
 resource "aws_s3_bucket_policy" "allow_cloudfront" {
-    count = var.origin_type == "s3" ? [1] : []
-
-  count = var.shared_origin_access_identity != "" ? 0 : 1
+  count  = var.shared_origin_access_identity != "" ? 0 : 1
   bucket = data.aws_s3_bucket.origin_bucket.id
   policy = data.aws_iam_policy_document.cloudfront[0].json
 }
@@ -40,7 +38,7 @@ data "aws_iam_policy_document" "cloudfront" {
   }
 
   statement {
-    sid = "AllowSSLRequestsOnly"
+    sid    = "AllowSSLRequestsOnly"
     effect = "Deny"
     actions = [
       "s3:*",
