@@ -76,7 +76,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
       }
     }
 
-    target_origin_id       = "${var.origin_domain_name}-${var.origin_id}-origin"
+    target_origin_id       = var.origin_id
     viewer_protocol_policy = "redirect-to-https"
 
     dynamic "function_association" {
