@@ -25,7 +25,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   enabled         = true
   is_ipv6_enabled = true
 
-  default_root_object = "index.html"
+  default_root_object = var.default_root_object
 
   viewer_certificate {
     cloudfront_default_certificate = var.use_cloudfront_default_certificate
@@ -34,11 +34,15 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     minimum_protocol_version       = var.minimum_protocol_version
   }
 
-  custom_error_response {
-    error_caching_min_ttl = var.custom_error_response_min_ttl
-    error_code            = var.custom_error_response_error_code
-    response_code         = var.custom_error_response_code
-    response_page_path    = "/index.html"
+
+  dynamic "custom_error_response" {
+    for_each = var.enable_spa_404 ? [1] : []
+    content {
+      error_caching_min_ttl = var.custom_error_response_min_ttl
+      error_code            = var.custom_error_response_error_code
+      response_code         = var.custom_error_response_code
+      response_page_path    = var.spa_404_page_path
+    }
   }
 
   aliases = var.use_cloudfront_default_certificate ? [] : [var.distribution_fqdn]

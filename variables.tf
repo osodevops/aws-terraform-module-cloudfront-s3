@@ -199,6 +199,23 @@ variable "cached_methods" {
   }
 }
 
+variable "default_root_object" {
+  description = "Object to serve at the distribution root path; set to \"index.html\" for SPA, or null to disable - by default."
+  type        = string
+  default     = null
+}
+
+variable "enable_spa_404" {
+  description = "Enable custom error response mapping 404s to /index.html for SPA deep linking."
+  type        = bool
+  default     = false
+}
+
+variable "spa_404_page_path" {
+  description = "Path served for SPA 404 rewrites when enable_spa_404 is true."
+  type        = string
+  default     = "/index.html"
+}
 variable "common_tags" {
   type        = map(string)
   description = "Implements the common tags."
