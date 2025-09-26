@@ -179,6 +179,26 @@ variable "s3_origin_access_identity" {
 }
 
 
+variable "allowed_methods" {
+  description = "Allowed HTTP methods for the default cache behavior (add OPTIONS for CORS or API verbs as needed)."
+  type        = set(string)
+  default     = ["GET", "HEAD"]
+  validation {
+    condition     = length(setsubtract(var.allowed_methods, ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"])) == 0
+    error_message = "allowed_methods must be a subset of: GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE."
+  }
+}
+
+variable "cached_methods" {
+  description = "HTTP methods CloudFront will cache for the default cache behavior (must be a subset of allowed_methods)."
+  type        = set(string)
+  default     = ["GET", "HEAD"]
+  validation {
+    condition     = length(setsubtract(var.cached_methods, var.allowed_methods)) == 0
+    error_message = "cached_methods must be a subset of allowed_methods."
+  }
+}
+
 variable "common_tags" {
   type        = map(string)
   description = "Implements the common tags."

@@ -58,15 +58,9 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     max_ttl     = var.cloudfront_cache_max_ttl
     compress    = var.cloudfront_cache_compress_content
 
-    allowed_methods = [
-      "GET",
-      "HEAD",
-    ]
+    allowed_methods = var.allowed_methods
 
-    cached_methods = [
-      "GET",
-      "HEAD",
-    ]
+    cached_methods = var.cached_methods
 
     forwarded_values {
       query_string = false
