@@ -194,8 +194,8 @@ variable "cached_methods" {
   type        = set(string)
   default     = ["GET", "HEAD"]
   validation {
-    condition     = length(setsubtract(var.cached_methods, var.allowed_methods)) == 0
-    error_message = "cached_methods must be a subset of allowed_methods."
+    condition     = length(setsubtract(var.cached_methods, ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"])) == 0
+    error_message = "cached_methods must be a subset of: GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE."
   }
 }
 
