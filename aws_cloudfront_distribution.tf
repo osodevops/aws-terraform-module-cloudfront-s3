@@ -1,8 +1,8 @@
 resource "aws_cloudfront_distribution" "s3_distribution" {
   provider = aws.cloudfront
   origin {
-    domain_name = var.origin_domain_name
-    origin_id   = var.origin_id
+    domain_name = local.effective_origin_domain_name
+    origin_id   = local.effective_origin_id
 
     dynamic "s3_origin_config" {
       for_each = var.origin_type == "s3" ? [1] : []
@@ -74,7 +74,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
       }
     }
 
-    target_origin_id       = var.origin_id
+    target_origin_id       = local.effective_origin_id
     viewer_protocol_policy = "redirect-to-https"
 
     dynamic "function_association" {

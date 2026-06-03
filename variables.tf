@@ -86,7 +86,8 @@ variable "price_class" {
 }
 
 variable "s3_source_bucket_name" {
-  type = string
+  type    = string
+  default = null
 }
 
 variable "ttl" {
@@ -152,13 +153,15 @@ variable "origin_type" {
 }
 
 variable "origin_domain_name" {
-  description = "The domain name of the origin"
+  description = "The domain name of the origin. For S3 origins this is derived automatically from s3_source_bucket_name if left empty."
   type        = string
+  default     = ""
 }
 
 variable "origin_id" {
-  description = "The unique origin ID"
+  description = "The unique origin ID. For S3 origins this is derived automatically from s3_source_bucket_name if left empty."
   type        = string
+  default     = ""
 }
 
 variable "custom_origin_config" {
@@ -224,4 +227,8 @@ variable "common_tags" {
 locals {
   logging_bucket_name = "${var.distribution_name}-cf-logs-${data.aws_region.current.name}-${lower(data.aws_iam_account_alias.current.account_alias)}"
   shared_origin_path  = var.shared_origin_access_identity != "" ? var.shared_origin_access_identity : aws_cloudfront_origin_access_identity.current[0].cloudfront_access_identity_path
+
+  # For S3 origins, derive domain_name and origin_id from the bucket data source if not explicitly set.
+  effective_origin_domain_name = var.origin_domain_name != "" ? var.origin_domain_name : one(data.aws_s3_bucket.origin_bucket).bucket_regional_domain_name
+  effective_origin_id          = var.origin_id != "" ? var.origin_id : "S3-${var.s3_source_bucket_name}"
 }
