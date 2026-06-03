@@ -1,5 +1,9 @@
-#certificate has to be created in us-east-1 due to cloudfront pre-requisite
-provider "aws" {
-  region  = "us-east-1"
-  alias = "cloudfront"
-}
+# The aws.cloudfront provider alias is declared via configuration_aliases in
+# terraform.tf. Consumers must pass it when calling this module:
+#
+#   providers = {
+#     aws.cloudfront = aws.us_east_1
+#   }
+#
+# The provider must target us-east-1 because CloudFront requires ACM
+# certificates in that region.
