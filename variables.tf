@@ -230,5 +230,5 @@ locals {
 
   # For S3 origins, derive domain_name and origin_id from the bucket data source if not explicitly set.
   effective_origin_domain_name = var.origin_domain_name != "" ? var.origin_domain_name : one(data.aws_s3_bucket.origin_bucket).bucket_regional_domain_name
-  effective_origin_id          = var.origin_id != "" ? var.origin_id : "S3-${var.s3_source_bucket_name}"
+  effective_origin_id          = var.origin_id != "" ? var.origin_id : "${var.s3_source_bucket_name}-origin"
 }
