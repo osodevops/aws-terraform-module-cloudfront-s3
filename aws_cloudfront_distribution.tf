@@ -7,7 +7,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     dynamic "s3_origin_config" {
       for_each = var.origin_type == "s3" ? [1] : []
       content {
-        origin_access_identity = var.s3_origin_access_identity
+        origin_access_identity = var.s3_origin_access_identity != "" ? var.s3_origin_access_identity : local.shared_origin_path
       }
     }
 
