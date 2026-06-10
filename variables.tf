@@ -22,6 +22,23 @@ variable "cloudfront_cache_compress_content" {
   default     = false
 }
 
+variable "forward_query_string" {
+  type        = bool
+  description = "Whether the default cache behavior forwards query strings to the origin and includes them in the cache key (legacy forwarded_values)."
+  default     = false
+}
+
+variable "forward_cookies" {
+  type        = string
+  description = "Which cookies the default cache behavior forwards to the origin and includes in the cache key: none, whitelist, or all (legacy forwarded_values)."
+  default     = "none"
+
+  validation {
+    condition     = contains(["none", "whitelist", "all"], var.forward_cookies)
+    error_message = "forward_cookies must be one of: none, whitelist, all."
+  }
+}
+
 variable "cors_rules" {
   description = "List of maps of cors rules to ap[ply to the logging bucket"
   type = list(object({

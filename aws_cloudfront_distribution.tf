@@ -67,10 +67,10 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     cached_methods = var.cached_methods
 
     forwarded_values {
-      query_string = false
+      query_string = var.forward_query_string
 
       cookies {
-        forward = "none"
+        forward = var.forward_cookies
       }
     }
 
