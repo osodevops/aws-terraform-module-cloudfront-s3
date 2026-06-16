@@ -68,6 +68,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
     forwarded_values {
       query_string = var.forward_query_string
+      headers      = var.forward_headers
 
       cookies {
         forward = var.forward_cookies

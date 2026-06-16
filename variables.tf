@@ -39,6 +39,12 @@ variable "forward_cookies" {
   }
 }
 
+variable "forward_headers" {
+  type        = list(string)
+  description = "Which request headers the default cache behavior forwards to the origin and includes in the cache key (legacy forwarded_values). Empty list forwards no headers."
+  default     = []
+}
+
 variable "cors_rules" {
   description = "List of maps of cors rules to ap[ply to the logging bucket"
   type = list(object({
