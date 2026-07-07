@@ -255,3 +255,26 @@ locals {
   effective_origin_domain_name = var.origin_domain_name != "" ? var.origin_domain_name : one(data.aws_s3_bucket.origin_bucket).bucket_regional_domain_name
   effective_origin_id          = var.origin_id != "" ? var.origin_id : "${var.s3_source_bucket_name}-origin"
 }
+
+variable "ordered_cache_behavior" {
+  description = <<-EOT
+    Ordered (path-based) cache behaviors, evaluated before the default cache
+    behavior. Uses legacy forwarded_values (like the default behavior) so
+    adding a behavior never switches the distribution to cache policies.
+    Defaults suit hashed static assets: long TTLs, cache key = path only.
+  EOT
+  type = list(object({
+    path_pattern           = string
+    allowed_methods        = optional(list(string), ["GET", "HEAD", "OPTIONS"])
+    cached_methods         = optional(list(string), ["GET", "HEAD"])
+    viewer_protocol_policy = optional(string, "redirect-to-https")
+    compress               = optional(bool, true)
+    min_ttl                = optional(number, 0)
+    default_ttl            = optional(number, 86400)
+    max_ttl                = optional(number, 31536000)
+    forward_query_string   = optional(bool, false)
+    forward_headers        = optional(list(string), [])
+    forward_cookies        = optional(string, "none")
+  }))
+  default = []
+}

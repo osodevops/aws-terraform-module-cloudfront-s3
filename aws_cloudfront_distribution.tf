@@ -87,6 +87,33 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     }
   }
 
+  # Path-based behaviors (e.g. hashed static assets cached at the edge while
+  # the default behavior stays dynamic).
+  dynamic "ordered_cache_behavior" {
+    for_each = var.ordered_cache_behavior
+    content {
+      path_pattern           = ordered_cache_behavior.value.path_pattern
+      allowed_methods        = ordered_cache_behavior.value.allowed_methods
+      cached_methods         = ordered_cache_behavior.value.cached_methods
+      target_origin_id       = local.effective_origin_id
+      viewer_protocol_policy = ordered_cache_behavior.value.viewer_protocol_policy
+      compress               = ordered_cache_behavior.value.compress
+
+      min_ttl     = ordered_cache_behavior.value.min_ttl
+      default_ttl = ordered_cache_behavior.value.default_ttl
+      max_ttl     = ordered_cache_behavior.value.max_ttl
+
+      forwarded_values {
+        query_string = ordered_cache_behavior.value.forward_query_string
+        headers      = ordered_cache_behavior.value.forward_headers
+
+        cookies {
+          forward = ordered_cache_behavior.value.forward_cookies
+        }
+      }
+    }
+  }
+
   price_class = var.price_class
 
   #security
