@@ -112,19 +112,25 @@ resource "aws_cloudfront_response_headers_policy" "security_headers_policy" {
   count = var.response_header_policy_enable ? 1 : 0
   security_headers_config {
     # https://infosec.mozilla.org/guidelines/web_security#x-content-type-options
-    # content_type_options {
-    #   override = true
-    # }
+    dynamic "content_type_options" {
+      for_each = var.content_type_options_enable ? [1] : []
+      content {
+        override = true
+      }
+    }
     # https://infosec.mozilla.org/guidelines/web_security#x-frame-options
     frame_options {
       frame_option = "DENY"
       override     = true
     }
     # https://infosec.mozilla.org/guidelines/web_security#referrer-policy
-    # referrer_policy {
-    #   referrer_policy = "same-origin"
-    #   override = true
-    # }
+    dynamic "referrer_policy" {
+      for_each = var.referrer_policy_enable ? [1] : []
+      content {
+        referrer_policy = var.referrer_policy
+        override        = true
+      }
+    }
     # https://infosec.mozilla.org/guidelines/web_security#content-security-policy
     # xss_protection {
     #   mode_block = true

@@ -255,3 +255,21 @@ locals {
   effective_origin_domain_name = var.origin_domain_name != "" ? var.origin_domain_name : one(data.aws_s3_bucket.origin_bucket).bucket_regional_domain_name
   effective_origin_id          = var.origin_id != "" ? var.origin_id : "${var.s3_source_bucket_name}-origin"
 }
+
+variable "content_type_options_enable" {
+  description = "Add X-Content-Type-Options: nosniff to the security headers policy"
+  type        = bool
+  default     = false
+}
+
+variable "referrer_policy_enable" {
+  description = "Add a Referrer-Policy header to the security headers policy"
+  type        = bool
+  default     = false
+}
+
+variable "referrer_policy" {
+  description = "Referrer-Policy value used when referrer_policy_enable is true"
+  type        = string
+  default     = "strict-origin-when-cross-origin"
+}
